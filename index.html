@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Portal Demo Cliente — Sistema de Finanzas Personales</title>
+  <meta name="description" content="Portal interactivo y visualización integral de finanzas personales, flujos de trabajo, negocios e inversiones. Versión demo cliente con datos interactivos y en tiempo real.">
+
+  <!-- Open Graph / Facebook / WhatsApp -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://finanzas-demo-cliente.vercel.app/">
+  <meta property="og:title" content="Portal Demo Cliente — Sistema de Finanzas Personales">
+  <meta property="og:description" content="Demostración interactiva en tiempo real: KPIs financieros, análisis multi-flujo (Personal, Trabajo, Negocios, Inversiones), gráficos de evolución y registro autónomo.">
+  <meta property="og:image" content="https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=1200&h=630&q=80">
+
+  <!-- Twitter / X -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Portal Demo Cliente — Sistema de Finanzas Personales">
+  <meta name="twitter:description" content="Demostración interactiva de gestión patrimonial y análisis financiero multi-área.">
+  <meta name="twitter:image" content="https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=1200&h=630&q=80">
+
+  <!-- Favicon SVG -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💎</text></svg>">
+
+  <!-- Chart.js CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Top Header -->
+    <header class="app-header">
+      <div class="header-brand">
+        <div class="brand-logo">💎</div>
+        <div>
+          <h1 class="brand-title">FINANZAS PERSONALES</h1>
+          <div class="brand-badge-wrapper">
+            <span class="badge-demo">Demo Cliente</span>
+            <span class="badge-period">Julio — Septiembre 2026</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <button id="themeToggle" class="btn-icon" title="Cambiar tema claro/oscuro" aria-label="Cambiar tema">
+          <span class="theme-icon">🌙</span>
+        </button>
+        <button id="btnOpenNewTx" class="btn btn-primary">
+          <span class="btn-icon-plus">+</span> Registrar Movimiento
+        </button>
+      </div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <nav class="area-nav" aria-label="Pestañas de área">
+      <button class="nav-tab active" data-area="Dashboard">
+        <span class="tab-icon">📊</span> Dashboard Global
+      </button>
+      <button class="nav-tab" data-area="Mi Trabajo">
+        <span class="tab-icon">💼</span> Mi Trabajo
+      </button>
+      <button class="nav-tab" data-area="Mis Negocios">
+        <span class="tab-icon">🚀</span> Mis Negocios
+      </button>
+      <button class="nav-tab" data-area="Mis Inversiones">
+        <span class="tab-icon">📈</span> Mis Inversiones
+      </button>
+      <button class="nav-tab" data-area="Personal">
+        <span class="tab-icon">🏠</span> Personal
+      </button>
+    </nav>
+
+    <!-- Global Filter Bar -->
+    <section class="filters-card">
+      <div class="filter-group">
+        <label for="filterPeriodo"><span class="filter-label-icon">📅</span> Periodo:</label>
+        <select id="filterPeriodo" class="form-control">
+          <option value="3m" selected>Últimos 3 meses (Jul-Sep 2026)</option>
+          <option value="2026-09">Septiembre 2026</option>
+          <option value="2026-08">Agosto 2026</option>
+          <option value="2026-07">Julio 2026</option>
+          <option value="custom">Personalizado...</option>
+        </select>
+      </div>
+
+      <div id="customDateRange" class="filter-group custom-dates" style="display: none;">
+        <input type="date" id="dateStart" class="form-control" value="2026-07-01">
+        <span class="date-sep">a</span>
+        <input type="date" id="dateEnd" class="form-control" value="2026-09-30">
+      </div>
+
+      <div class="filter-group">
+        <label for="filterFlujo"><span class="filter-label-icon">🔀</span> Flujo:</label>
+        <select id="filterFlujo" class="form-control">
+          <option value="Todos" selected>Todos los flujos</option>
+          <option value="Personal">Personal</option>
+          <option value="Mi Trabajo">Mi Trabajo</option>
+          <option value="Mis Negocios">Mis Negocios</option>
+          <option value="Mis Inversiones">Mis Inversiones</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label for="filterEstado"><span class="filter-label-icon">🔘</span> Estado:</label>
+        <select id="filterEstado" class="form-control">
+          <option value="Confirmado" selected>Solo Confirmados</option>
+          <option value="Pendiente de revisión">Solo Pendientes</option>
+          <option value="Todos">Todos (Confirmados + Pendientes)</option>
+        </select>
+      </div>
+
+      <div class="filter-group search-filter">
+        <label for="filterSearch"><span class="filter-label-icon">🔍</span> Buscar:</label>
+        <input type="text" id="filterSearch" class="form-control" placeholder="Buscar detalle o proveedor...">
+      </div>
+
+      <button id="btnResetFilters" class="btn btn-secondary btn-sm" title="Restablecer filtros">
+        Limpiar
+      </button>
+    </section>
+
+    <!-- Main Content Dynamic View -->
+    <main id="mainViewContainer">
+      <!-- Area Header / Description -->
+      <div id="areaHeaderBanner" class="area-banner" style="display: none;">
+        <div class="area-banner-content">
+          <h2 id="areaBannerTitle">Mi Trabajo</h2>
+          <p id="areaBannerDesc">Métricas financieras, evolución de ingresos laborales y registro histórico.</p>
+        </div>
+      </div>
+
+      <!-- Pending Alert Banner (if any pending tx exists in current filter) -->
+      <div id="pendingAlertBanner" class="alert-pending" style="display: none;">
+        <div class="alert-icon">⚠️</div>
+        <div class="alert-info">
+          <strong>Atención:</strong> Tienes <span id="pendingCount">1</span> movimiento <span class="badge-pending-pill">Pendiente de revisión</span> por un total de <span id="pendingSum" class="font-bold">Bs 35.00</span>.
+        </div>
+        <button id="btnShowPendingOnly" class="btn btn-warning-outline btn-sm">Ver pendientes</button>
+      </div>
+
+      <!-- KPIs Section -->
+      <section class="kpis-grid" aria-label="Indicadores Clave de Desempeño">
+        <div class="kpi-card kpi-income">
+          <div class="kpi-header">
+            <span class="kpi-title">Ingresos Totales</span>
+            <span class="kpi-icon">💰</span>
+          </div>
+          <div class="kpi-value" id="kpiIngresos">Bs 0.00</div>
+          <div class="kpi-footer text-success" id="kpiIngresosSub">Flujos confirmados</div>
+        </div>
+
+        <div class="kpi-card kpi-expense">
+          <div class="kpi-header">
+            <span class="kpi-title">Gastos Totales</span>
+            <span class="kpi-icon">💸</span>
+          </div>
+          <div class="kpi-value" id="kpiGastos">Bs 0.00</div>
+          <div class="kpi-footer text-danger" id="kpiGastosSub">Egresos operativos y personales</div>
+        </div>
+
+        <div class="kpi-card kpi-balance">
+          <div class="kpi-header">
+            <span class="kpi-title">Balance Neto</span>
+            <span class="kpi-icon">⚖️</span>
+          </div>
+          <div class="kpi-value" id="kpiBalance">Bs 0.00</div>
+          <div class="kpi-footer" id="kpiBalanceSub">Superávit del período</div>
+        </div>
+
+        <div class="kpi-card kpi-saving">
+          <div class="kpi-header">
+            <span class="kpi-title">Tasa de Ahorro / Margen</span>
+            <span class="kpi-icon">🎯</span>
+          </div>
+          <div class="kpi-value" id="kpiAhorro">0.0%</div>
+          <div class="kpi-progress-bar">
+            <div class="kpi-progress-fill" id="kpiAhorroBar" style="width: 0%;"></div>
+          </div>
+          <div class="kpi-footer text-muted" id="kpiAhorroSub">Capacidad de acumulación</div>
+        </div>
+      </section>
+
+      <!-- Charts Section -->
+      <section class="charts-grid" aria-label="Visualización de Gráficos">
+        <!-- Monthly Evolution Line Chart -->
+        <div class="chart-card chart-large">
+          <div class="chart-header">
+            <h3 class="chart-title"><span class="chart-title-icon">📈</span> Evolución Temporal (Ingresos vs Gastos)</h3>
+            <span class="badge-chip">Mes a Mes</span>
+          </div>
+          <div class="chart-wrapper">
+            <canvas id="chartEvolucion"></canvas>
+          </div>
+        </div>
+
+        <!-- Expense by Category Bar Chart -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <h3 class="chart-title"><span class="chart-title-icon">📍</span> Gastos por Categoría</h3>
+            <span class="badge-chip">Top Categorías</span>
+          </div>
+          <div class="chart-wrapper">
+            <canvas id="chartCategorias"></canvas>
+          </div>
+        </div>
+
+        <!-- Income Distribution Donut Chart -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <h3 class="chart-title"><span class="chart-title-icon">🍩</span> Distribución de Ingresos</h3>
+            <span class="badge-chip">Por Flujo</span>
+          </div>
+          <div class="chart-wrapper">
+            <canvas id="chartIngresosFlujo"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <!-- Flow Summary Table (Visible in Dashboard view) -->
+      <section id="flowSummarySection" class="table-card" aria-label="Resumen por Flujo">
+        <div class="table-card-header">
+          <h3 class="card-title">🎯 Rendimiento Consolidado por Flujo</h3>
+          <span class="text-muted text-sm">Personal, Laboral, Negocios e Inversiones</span>
+        </div>
+        <div class="table-responsive">
+          <table class="data-table" id="tablaResumenFlujos">
+            <thead>
+              <tr>
+                <th>Flujo</th>
+                <th class="text-right">Ingresos</th>
+                <th class="text-right">Gastos</th>
+                <th class="text-right">Balance Neto</th>
+                <th class="text-right">% Participación</th>
+                <th class="text-center">Estado</th>
+              </tr>
+            </thead>
+            <tbody id="tbodyResumenFlujos">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Recent Transactions Table -->
+      <section class="table-card" aria-label="Tabla de Transacciones">
+        <div class="table-card-header">
+          <div>
+            <h3 class="card-title" id="tableTitle">📋 Registro de Movimientos</h3>
+            <p class="card-subtitle text-sm text-muted" id="tableSubtitle">Listado filtrado con detalle y trazabilidad</p>
+          </div>
+          <div class="table-actions">
+            <span id="txCountBadge" class="badge-count">0 movimientos</span>
+            <button id="btnExportCsv" class="btn btn-secondary btn-sm" title="Descargar datos en formato CSV">
+              📥 Exportar CSV
+            </button>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="data-table" id="tablaMovimientos">
+            <thead>
+              <tr>
+                <th>Fecha</th>
+                <th>Flujo</th>
+                <th>Categoría / Subcategoría</th>
+                <th>Detalle & Proveedor</th>
+                <th class="text-right">Monto</th>
+                <th class="text-center">Estado</th>
+                <th class="text-center">Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="tbodyMovimientos">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+        </div>
+
+        <div id="emptyState" class="empty-state" style="display: none;">
+          <div class="empty-state-icon">📂</div>
+          <h4>No se encontraron movimientos</h4>
+          <p class="text-muted">Prueba cambiando los filtros de periodo, flujo o estado.</p>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <div class="footer-content">
+        <div>
+          <strong>Finanzas Personales — Demo Cliente</strong> • Versión Standalone Segura
+        </div>
+        <div class="footer-meta">
+          <span>Moneda: <strong>BOB (Bs)</strong></span> •
+          <span>Aislamiento: <strong>100% Local</strong></span> •
+          <button id="btnResetDemoData" class="btn-link" title="Restaurar a los 35 movimientos iniciales">Restablecer datos demo</button>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Modal: Registrar / Editar Movimiento -->
+  <div id="modalTx" class="modal-overlay" aria-hidden="true" role="dialog" aria-labelledby="modalTxTitle">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 id="modalTxTitle">Registrar Movimiento</h3>
+        <button class="modal-close" id="btnCloseModalTx" aria-label="Cerrar modal">&times;</button>
+      </div>
+      <form id="formTx">
+        <input type="hidden" id="txIdHidden" value="">
+
+        <div class="modal-body">
+          <div class="form-row">
+            <div class="form-group flex-1">
+              <label>Tipo de Movimiento: <span class="text-danger">*</span></label>
+              <div class="radio-toggle-group">
+                <label class="radio-pill">
+                  <input type="radio" name="txTipo" value="Gasto" checked>
+                  <span class="radio-pill-label expense">💸 Gasto</span>
+                </label>
+                <label class="radio-pill">
+                  <input type="radio" name="txTipo" value="Ingreso">
+                  <span class="radio-pill-label income">💰 Ingreso</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="form-group flex-1">
+              <label for="txFlujo">Flujo: <span class="text-danger">*</span></label>
+              <select id="txFlujo" class="form-control" required>
+                <option value="Personal">Personal</option>
+                <option value="Mi Trabajo">Mi Trabajo</option>
+                <option value="Mis Negocios">Mis Negocios</option>
+                <option value="Mis Inversiones">Mis Inversiones</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group flex-1">
+              <label for="txFecha">Fecha: <span class="text-danger">*</span></label>
+              <input type="date" id="txFecha" class="form-control" value="2026-09-04" required>
+            </div>
+
+            <div class="form-group flex-1">
+              <label for="txMonto">Monto (BOB): <span class="text-danger">*</span></label>
+              <div class="input-prefix-group">
+                <span class="input-prefix">Bs</span>
+                <input type="number" id="txMonto" class="form-control" step="0.01" min="0.01" placeholder="0.00" required>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group flex-1">
+              <label for="txCategoria">Categoría: <span class="text-danger">*</span></label>
+              <select id="txCategoria" class="form-control" required>
+                <!-- Dynamically populated -->
+              </select>
+            </div>
+
+            <div class="form-group flex-1">
+              <label for="txSubcategoria">Subcategoría:</label>
+              <select id="txSubcategoria" class="form-control">
+                <!-- Dynamically populated -->
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group flex-1">
+              <label for="txDetalle">Detalle / Descripción: <span class="text-danger">*</span></label>
+              <input type="text" id="txDetalle" class="form-control" placeholder="Ej: Compra supermercado, Salario, etc." required>
+            </div>
+
+            <div class="form-group flex-1">
+              <label for="txProveedor">Proveedor / Entidad:</label>
+              <input type="text" id="txProveedor" class="form-control" placeholder="Ej: Hipermaxi, Uber, Empresa, Broker...">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group flex-1">
+              <label for="txMetodo">Método de Pago / Cuenta:</label>
+              <select id="txMetodo" class="form-control">
+                <option value="Efectivo">Efectivo</option>
+                <option value="Tarjeta de Débito BCP">Tarjeta de Débito BCP</option>
+                <option value="Tarjeta de Crédito">Tarjeta de Crédito</option>
+                <option value="Transferencia QR">Transferencia QR</option>
+                <option value="Cuenta Inversiones">Cuenta Inversiones</option>
+              </select>
+            </div>
+
+            <div class="form-group flex-1">
+              <label for="txEstado">Estado del Movimiento:</label>
+              <select id="txEstado" class="form-control">
+                <option value="Confirmado" selected>✓ Confirmado</option>
+                <option value="Pendiente de revisión">⚠️ Pendiente de revisión</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" id="btnCancelModalTx">Cancelar</button>
+          <button type="submit" class="btn btn-primary" id="btnSubmitTx">Guardar Movimiento</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Ver Desglose de Detalles -->
+  <div id="modalDetails" class="modal-overlay" aria-hidden="true" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 id="modalDetailsTitle">Desglose de Compra</h3>
+        <button class="modal-close" id="btnCloseModalDetails" aria-label="Cerrar modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="detail-header-info">
+          <div id="detailTxSummary" class="font-medium text-sm text-muted"></div>
+        </div>
+        <table class="data-table mt-3" id="tablaDetallesDesglose">
+          <thead>
+            <tr>
+              <th>Producto / Concepto</th>
+              <th class="text-center">Cant.</th>
+              <th class="text-right">Monto Unitario</th>
+              <th class="text-right">Total</th>
+            </tr>
+          </thead>
+          <tbody id="tbodyDetallesDesglose">
+            <!-- Rendered via JS -->
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="btnCloseDetailsBtn">Entendido</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
