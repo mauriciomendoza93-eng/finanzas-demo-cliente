@@ -928,9 +928,12 @@
   function getThemeColors() {
     const isDark = document.documentElement.getAttribute("data-theme") === "dark";
     return {
-      textColor: isDark ? "#cbd5e1" : "#475569",
-      gridColor: isDark ? "rgba(255, 255, 255, 0.08)" : "rgba(0, 0, 0, 0.06)",
-      fontFamily: "'Inter', sans-serif"
+      textColor: isDark ? "#9ca3af" : "#6b7280",
+      gridColor: isDark ? "rgba(255, 255, 255, 0.04)" : "rgba(0, 0, 0, 0.04)",
+      fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", sans-serif',
+      tooltipBg: isDark ? "rgba(18, 18, 20, 0.95)" : "rgba(255, 255, 255, 0.95)",
+      tooltipBorder: isDark ? "rgba(255, 255, 255, 0.08)" : "rgba(0, 0, 0, 0.08)",
+      tooltipText: isDark ? "#f3f4f6" : "#111827"
     };
   }
 
@@ -974,53 +977,80 @@
         labels: nombresMeses,
         datasets: [
           {
-            label: "Ingresos (BOB)",
+            label: "Ingresos",
             data: dataIngresos,
             borderColor: "#10b981",
-            backgroundColor: "rgba(16, 185, 129, 0.12)",
-            borderWidth: 3,
-            tension: 0.35,
+            backgroundColor: "rgba(16, 185, 129, 0.08)",
+            borderWidth: 2.5,
+            tension: 0.4,
             fill: true,
             pointBackgroundColor: "#10b981",
-            pointRadius: 5
+            pointBorderColor: "#ffffff",
+            pointBorderWidth: 2,
+            pointRadius: 4,
+            pointHoverRadius: 6
           },
           {
-            label: "Gastos (BOB)",
+            label: "Gastos",
             data: dataGastos,
             borderColor: "#ef4444",
-            backgroundColor: "rgba(239, 68, 68, 0.08)",
-            borderWidth: 3,
-            tension: 0.35,
+            backgroundColor: "rgba(239, 68, 68, 0.05)",
+            borderWidth: 2.5,
+            tension: 0.4,
             fill: true,
             pointBackgroundColor: "#ef4444",
-            pointRadius: 5
+            pointBorderColor: "#ffffff",
+            pointBorderWidth: 2,
+            pointRadius: 4,
+            pointHoverRadius: 6
           }
         ]
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
+        interaction: {
+          mode: 'index',
+          intersect: false,
+        },
         plugins: {
           legend: {
             position: "top",
-            labels: { color: theme.textColor, font: { family: theme.fontFamily, weight: 600 } }
+            align: "end",
+            labels: {
+              boxWidth: 8,
+              boxHeight: 8,
+              usePointStyle: true,
+              pointStyle: 'circle',
+              color: theme.textColor,
+              font: { family: theme.fontFamily, size: 12, weight: 500 }
+            }
           },
           tooltip: {
+            backgroundColor: theme.tooltipBg,
+            titleColor: theme.tooltipText,
+            bodyColor: theme.textColor,
+            borderColor: theme.tooltipBorder,
+            borderWidth: 1,
+            cornerRadius: 10,
+            padding: 12,
+            boxPadding: 6,
+            usePointStyle: true,
             callbacks: {
-              label: (ctx) => ` ${ctx.dataset.label}: ${formatMonto(ctx.parsed.y)}`
+              label: (ctx) => `  ${ctx.dataset.label}: ${formatMonto(ctx.parsed.y)}`
             }
           }
         },
         scales: {
           x: {
-            grid: { color: theme.gridColor },
-            ticks: { color: theme.textColor, font: { family: theme.fontFamily } }
+            grid: { display: false },
+            ticks: { color: theme.textColor, font: { family: theme.fontFamily, size: 12 } }
           },
           y: {
-            grid: { color: theme.gridColor },
+            grid: { color: theme.gridColor, drawBorder: false },
             ticks: {
               color: theme.textColor,
-              font: { family: theme.fontFamily },
+              font: { family: theme.fontFamily, size: 11 },
               callback: (val) => `${CONFIG.simbolo} ${val.toLocaleString()}`
             }
           }
@@ -1039,7 +1069,6 @@
       }
     });
 
-    // Ordenar de mayor a menor y tomar top
     const sortedCats = Object.keys(catGastosMap).sort((a, b) => catGastosMap[b] - catGastosMap[a]);
     const catLabels = sortedCats.slice(0, 6);
     const catData = catLabels.map(c => catGastosMap[c]);
@@ -1047,7 +1076,7 @@
     const ctxCategorias = document.getElementById("chartCategorias").getContext("2d");
     if (chartCategoriasInstance) chartCategoriasInstance.destroy();
 
-    const barColors = ["#3b82f6", "#8b5cf6", "#ec4899", "#f59e0b", "#10b981", "#64748b"];
+    const barColors = ["#3b82f6", "#6366f1", "#8b5cf6", "#ec4899", "#f59e0b", "#10b981"];
 
     chartCategoriasInstance = new Chart(ctxCategorias, {
       type: "bar",
@@ -1055,11 +1084,12 @@
         labels: catLabels.length > 0 ? catLabels : ["Sin datos"],
         datasets: [
           {
-            label: "Monto de Gasto (BOB)",
+            label: "Gasto",
             data: catData.length > 0 ? catData : [0],
             backgroundColor: barColors.slice(0, catLabels.length),
-            borderRadius: 6,
-            borderSkipped: false
+            borderRadius: 8,
+            borderSkipped: false,
+            barThickness: 24
           }
         ]
       },
@@ -1069,21 +1099,28 @@
         plugins: {
           legend: { display: false },
           tooltip: {
+            backgroundColor: theme.tooltipBg,
+            titleColor: theme.tooltipText,
+            bodyColor: theme.textColor,
+            borderColor: theme.tooltipBorder,
+            borderWidth: 1,
+            cornerRadius: 10,
+            padding: 12,
             callbacks: {
-              label: (ctx) => ` Gasto: ${formatMonto(ctx.parsed.y)}`
+              label: (ctx) => `  Gasto: ${formatMonto(ctx.parsed.y)}`
             }
           }
         },
         scales: {
           x: {
             grid: { display: false },
-            ticks: { color: theme.textColor, font: { family: theme.fontFamily } }
+            ticks: { color: theme.textColor, font: { family: theme.fontFamily, size: 11 } }
           },
           y: {
-            grid: { color: theme.gridColor },
+            grid: { color: theme.gridColor, drawBorder: false },
             ticks: {
               color: theme.textColor,
-              font: { family: theme.fontFamily },
+              font: { family: theme.fontFamily, size: 11 },
               callback: (val) => `${CONFIG.simbolo} ${val.toLocaleString()}`
             }
           }
@@ -1120,8 +1157,8 @@
           {
             data: flujoData.length > 0 ? flujoData : [1],
             backgroundColor: flujoLabels.length > 0 ? donutColors.slice(0, flujoLabels.length) : ["#94a3b8"],
-            borderWidth: 2,
-            borderColor: document.documentElement.getAttribute("data-theme") === "dark" ? "#111827" : "#ffffff"
+            borderWidth: 3,
+            borderColor: document.documentElement.getAttribute("data-theme") === "dark" ? "#121214" : "#ffffff"
           }
         ]
       },
@@ -1131,15 +1168,29 @@
         plugins: {
           legend: {
             position: "bottom",
-            labels: { color: theme.textColor, font: { family: theme.fontFamily, size: 11 } }
+            labels: {
+              boxWidth: 8,
+              boxHeight: 8,
+              usePointStyle: true,
+              pointStyle: 'circle',
+              color: theme.textColor,
+              font: { family: theme.fontFamily, size: 11 }
+            }
           },
           tooltip: {
+            backgroundColor: theme.tooltipBg,
+            titleColor: theme.tooltipText,
+            bodyColor: theme.textColor,
+            borderColor: theme.tooltipBorder,
+            borderWidth: 1,
+            cornerRadius: 10,
+            padding: 12,
             callbacks: {
-              label: (ctx) => ` ${ctx.label}: ${formatMonto(ctx.parsed)}`
+              label: (ctx) => `  ${ctx.label}: ${formatMonto(ctx.parsed)}`
             }
           }
         },
-        cutout: "68%"
+        cutout: "75%"
       }
     });
   }
