@@ -1237,7 +1237,7 @@
         <td class="text-right font-bold ${net >= 0 ? "text-success" : "text-danger"}">${formatMonto(net)}</td>
         <td class="text-right font-medium">${part}%</td>
         <td class="text-center">
-          <span class="badge-status confirmed">✓ Operativo</span>
+          <span class="badge-status confirmed">Operativo</span>
         </td>
       `;
       tbody.appendChild(tr);
@@ -1292,14 +1292,14 @@
         <td class="text-right ${montoClass}">${montoFormatted}</td>
         <td class="text-center">
           ${r.estado === "Confirmado"
-            ? '<span class="badge-status confirmed">✓ Confirmado</span>'
-            : '<span class="badge-status pending">⚠️ Pendiente</span>'}
+            ? '<span class="badge-status confirmed">Confirmado</span>'
+            : '<span class="badge-status pending">Pendiente</span>'}
         </td>
         <td class="text-center">
           <div class="table-row-actions">
-            ${hasDetails ? `<button class="btn-action btn-action-details" data-id="${r.registro_id}" title="Ver desglose de compra">👁️</button>` : ""}
-            <button class="btn-action btn-action-edit" data-id="${r.registro_id}" title="Editar movimiento">✏️</button>
-            <button class="btn-action btn-action-delete" data-id="${r.registro_id}" title="Eliminar movimiento">🗑️</button>
+            ${hasDetails ? `<button class="btn-action btn-action-details" data-id="${r.registro_id}" title="Ver desglose de compra"><svg class="icon" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>` : ""}
+            <button class="btn-action btn-action-edit" data-id="${r.registro_id}" title="Editar movimiento"><svg class="icon" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+            <button class="btn-action btn-action-delete" data-id="${r.registro_id}" title="Eliminar movimiento"><svg class="icon" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
           </div>
         </td>
       `;
@@ -1450,12 +1450,12 @@
     const estado = document.getElementById("txEstado").value;
 
     if (!monto || monto <= 0) {
-      mostrarToast("⚠️ El monto debe ser un valor numérico positivo mayor a 0.", "warning");
+      mostrarToast("El monto debe ser un valor numérico positivo mayor a 0.", "warning");
       return;
     }
 
     if (!detalle) {
-      mostrarToast("⚠️ La descripción o detalle es obligatoria.", "warning");
+      mostrarToast("La descripción o detalle es obligatoria.", "warning");
       return;
     }
 
@@ -1476,7 +1476,7 @@
           metodo_pago: metodo,
           estado
         };
-        mostrarToast(`✓ Movimiento editado exitosamente: ${detalle}`, "success");
+        mostrarToast(`Movimiento editado: ${detalle}`, "success");
       }
     } else {
       // Creación
@@ -1499,7 +1499,7 @@
         timestamp: new Date().toISOString()
       };
       state.registros.unshift(nuevoMov);
-      mostrarToast(`✓ Nuevo movimiento registrado: ${detalle} (Bs ${monto.toFixed(2)})`, "success");
+      mostrarToast(`Movimiento registrado: ${detalle} (Bs ${monto.toFixed(2)})`, "success");
     }
 
     guardarEnLocalStorage();
@@ -1515,7 +1515,7 @@
       state.registros = state.registros.filter(r => r.registro_id !== registroId);
       guardarEnLocalStorage();
       renderizarTodo();
-      mostrarToast(`🗑️ Movimiento eliminado: ${tx.detalle}`, "warning");
+      mostrarToast(`Movimiento eliminado: ${tx.detalle}`, "warning");
     }
   }
 
@@ -1552,7 +1552,7 @@
   function exportarACSV() {
     const registrosFiltrados = obtenerRegistrosFiltrados();
     if (registrosFiltrados.length === 0) {
-      mostrarToast("⚠️ No hay movimientos para exportar con los filtros actuales.", "warning");
+      mostrarToast("No hay movimientos para exportar con los filtros actuales.", "warning");
       return;
     }
 
@@ -1580,23 +1580,23 @@
     link.click();
     document.body.removeChild(link);
 
-    mostrarToast("📥 Archivo CSV descargado con éxito.", "success");
+    mostrarToast("Archivo CSV descargado con éxito.", "success");
   }
 
   // =========================================================================
   // 11. GESTIÓN DE TEMAS (DARK / LIGHT) & TOASTS
   // =========================================================================
   function initTheme() {
-    let savedTheme = "light";
+    let savedTheme = "dark";
     try {
-      savedTheme = localStorage.getItem(THEME_KEY) || "light";
+      savedTheme = localStorage.getItem(THEME_KEY) || "dark";
     } catch (e) {}
 
     document.documentElement.setAttribute("data-theme", savedTheme);
     actualizarIconoTema(savedTheme);
 
     document.getElementById("themeToggle").addEventListener("click", () => {
-      const current = document.documentElement.getAttribute("data-theme") || "light";
+      const current = document.documentElement.getAttribute("data-theme") || "dark";
       const next = current === "light" ? "dark" : "light";
       document.documentElement.setAttribute("data-theme", next);
       try {
@@ -1608,8 +1608,14 @@
   }
 
   function actualizarIconoTema(theme) {
-    const icon = document.querySelector(".theme-icon");
-    if (icon) icon.textContent = theme === "dark" ? "☀️" : "🌙";
+    const icon = document.querySelector(".theme-icon-svg");
+    if (icon) {
+      if (theme === "dark") {
+        icon.innerHTML = '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>';
+      } else {
+        icon.innerHTML = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
+      }
+    }
   }
 
   function mostrarToast(mensaje, tipo = "info") {

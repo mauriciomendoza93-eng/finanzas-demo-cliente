@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es" data-theme="light">
+<html lang="es" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,7 +11,7 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://finanzas-demo-cliente.vercel.app/">
   <meta property="og:title" content="Portal Demo Cliente — Sistema de Finanzas Personales">
-  <meta property="og:description" content="Demostración interactiva en tiempo real: KPIs financieros, análisis multi-flujo (Personal, Trabajo, Negocios, Inversiones), gráficos de evolución y registro autónomo.">
+  <meta property="og:description" content="Demostración interactiva en tiempo real: KPIs financieros, análisis multi-flujo, gráficos de evolución y registro autónomo.">
   <meta property="og:image" content="https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=1200&h=630&q=80">
 
   <!-- Twitter / X -->
@@ -20,8 +20,8 @@
   <meta name="twitter:description" content="Demostración interactiva de gestión patrimonial y análisis financiero multi-área.">
   <meta name="twitter:image" content="https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=1200&h=630&q=80">
 
-  <!-- Favicon SVG -->
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💎</text></svg>">
+  <!-- Favicon SVG Minimalista -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23007aff' stroke-width='2'><path d='M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5'/></svg>">
 
   <!-- Chart.js CDN -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
@@ -29,7 +29,7 @@
   <!-- Google Fonts: Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="styles.css">
 </head>
@@ -38,9 +38,11 @@
     <!-- Top Header -->
     <header class="app-header">
       <div class="header-brand">
-        <div class="brand-logo">💎</div>
+        <div class="brand-logo">
+          <svg class="icon icon-lg" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        </div>
         <div>
-          <h1 class="brand-title">FINANZAS PERSONALES</h1>
+          <h1 class="brand-title">Finanzas Personales</h1>
           <div class="brand-badge-wrapper">
             <span class="badge-demo">Demo Cliente</span>
             <span class="badge-period">Julio — Septiembre 2026</span>
@@ -50,37 +52,43 @@
 
       <div class="header-actions">
         <button id="themeToggle" class="btn-icon" title="Cambiar tema claro/oscuro" aria-label="Cambiar tema">
-          <span class="theme-icon">🌙</span>
+          <svg class="icon theme-icon-svg" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
         </button>
         <button id="btnOpenNewTx" class="btn btn-primary">
-          <span class="btn-icon-plus">+</span> Registrar Movimiento
+          <svg class="icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          <span>Registrar Movimiento</span>
         </button>
       </div>
     </header>
 
-    <!-- Navigation Tabs -->
+    <!-- Navigation Segment Control -->
     <nav class="area-nav" aria-label="Pestañas de área">
       <button class="nav-tab active" data-area="Dashboard">
-        <span class="tab-icon">📊</span> Dashboard Global
+        <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        <span>Dashboard</span>
       </button>
       <button class="nav-tab" data-area="Mi Trabajo">
-        <span class="tab-icon">💼</span> Mi Trabajo
+        <svg class="icon" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+        <span>Mi Trabajo</span>
       </button>
       <button class="nav-tab" data-area="Mis Negocios">
-        <span class="tab-icon">🚀</span> Mis Negocios
+        <svg class="icon" viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+        <span>Mis Negocios</span>
       </button>
       <button class="nav-tab" data-area="Mis Inversiones">
-        <span class="tab-icon">📈</span> Mis Inversiones
+        <svg class="icon" viewBox="0 0 24 24"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+        <span>Mis Inversiones</span>
       </button>
       <button class="nav-tab" data-area="Personal">
-        <span class="tab-icon">🏠</span> Personal
+        <svg class="icon" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <span>Personal</span>
       </button>
     </nav>
 
     <!-- Global Filter Bar -->
     <section class="filters-card">
       <div class="filter-group">
-        <label for="filterPeriodo"><span class="filter-label-icon">📅</span> Periodo:</label>
+        <label for="filterPeriodo">Periodo</label>
         <select id="filterPeriodo" class="form-control">
           <option value="3m" selected>Últimos 3 meses (Jul-Sep 2026)</option>
           <option value="2026-09">Septiembre 2026</option>
@@ -92,12 +100,12 @@
 
       <div id="customDateRange" class="filter-group custom-dates" style="display: none;">
         <input type="date" id="dateStart" class="form-control" value="2026-07-01">
-        <span class="date-sep">a</span>
+        <span class="date-sep">—</span>
         <input type="date" id="dateEnd" class="form-control" value="2026-09-30">
       </div>
 
       <div class="filter-group">
-        <label for="filterFlujo"><span class="filter-label-icon">🔀</span> Flujo:</label>
+        <label for="filterFlujo">Flujo</label>
         <select id="filterFlujo" class="form-control">
           <option value="Todos" selected>Todos los flujos</option>
           <option value="Personal">Personal</option>
@@ -108,21 +116,20 @@
       </div>
 
       <div class="filter-group">
-        <label for="filterEstado"><span class="filter-label-icon">🔘</span> Estado:</label>
+        <label for="filterEstado">Estado</label>
         <select id="filterEstado" class="form-control">
-          <option value="Confirmado" selected>Solo Confirmados</option>
-          <option value="Pendiente de revisión">Solo Pendientes</option>
-          <option value="Todos">Todos (Confirmados + Pendientes)</option>
+          <option value="Confirmado" selected>Confirmados</option>
+          <option value="Pendiente de revisión">Pendientes</option>
+          <option value="Todos">Todos</option>
         </select>
       </div>
 
       <div class="filter-group search-filter">
-        <label for="filterSearch"><span class="filter-label-icon">🔍</span> Buscar:</label>
-        <input type="text" id="filterSearch" class="form-control" placeholder="Buscar detalle o proveedor...">
+        <input type="text" id="filterSearch" class="form-control" placeholder="Buscar por concepto o proveedor...">
       </div>
 
       <button id="btnResetFilters" class="btn btn-secondary btn-sm" title="Restablecer filtros">
-        Limpiar
+        Restablecer
       </button>
     </section>
 
@@ -138,48 +145,36 @@
 
       <!-- Pending Alert Banner (if any pending tx exists in current filter) -->
       <div id="pendingAlertBanner" class="alert-pending" style="display: none;">
-        <div class="alert-icon">⚠️</div>
         <div class="alert-info">
-          <strong>Atención:</strong> Tienes <span id="pendingCount">1</span> movimiento <span class="badge-pending-pill">Pendiente de revisión</span> por un total de <span id="pendingSum" class="font-bold">Bs 35.00</span>.
+          <span class="alert-indicator"></span>
+          <span>Tienes <strong id="pendingCount">1</strong> movimiento pendiente de revisión por <strong id="pendingSum">Bs 35.00</strong></span>
         </div>
-        <button id="btnShowPendingOnly" class="btn btn-warning-outline btn-sm">Ver pendientes</button>
+        <button id="btnShowPendingOnly" class="btn btn-secondary btn-sm">Ver pendientes</button>
       </div>
 
       <!-- KPIs Section -->
       <section class="kpis-grid" aria-label="Indicadores Clave de Desempeño">
-        <div class="kpi-card kpi-income">
-          <div class="kpi-header">
-            <span class="kpi-title">Ingresos Totales</span>
-            <span class="kpi-icon">💰</span>
-          </div>
-          <div class="kpi-value" id="kpiIngresos">Bs 0.00</div>
-          <div class="kpi-footer text-success" id="kpiIngresosSub">Flujos confirmados</div>
+        <div class="kpi-card">
+          <span class="kpi-title">Ingresos Totales</span>
+          <div class="kpi-value text-success tabular-nums" id="kpiIngresos">Bs 0.00</div>
+          <div class="kpi-footer text-muted" id="kpiIngresosSub">Flujos confirmados</div>
         </div>
 
-        <div class="kpi-card kpi-expense">
-          <div class="kpi-header">
-            <span class="kpi-title">Gastos Totales</span>
-            <span class="kpi-icon">💸</span>
-          </div>
-          <div class="kpi-value" id="kpiGastos">Bs 0.00</div>
-          <div class="kpi-footer text-danger" id="kpiGastosSub">Egresos operativos y personales</div>
+        <div class="kpi-card">
+          <span class="kpi-title">Gastos Totales</span>
+          <div class="kpi-value text-danger tabular-nums" id="kpiGastos">Bs 0.00</div>
+          <div class="kpi-footer text-muted" id="kpiGastosSub">Egresos operativos y personales</div>
         </div>
 
-        <div class="kpi-card kpi-balance">
-          <div class="kpi-header">
-            <span class="kpi-title">Balance Neto</span>
-            <span class="kpi-icon">⚖️</span>
-          </div>
-          <div class="kpi-value" id="kpiBalance">Bs 0.00</div>
-          <div class="kpi-footer" id="kpiBalanceSub">Superávit del período</div>
+        <div class="kpi-card">
+          <span class="kpi-title">Balance Neto</span>
+          <div class="kpi-value text-main tabular-nums" id="kpiBalance">Bs 0.00</div>
+          <div class="kpi-footer text-muted" id="kpiBalanceSub">Superávit del período</div>
         </div>
 
-        <div class="kpi-card kpi-saving">
-          <div class="kpi-header">
-            <span class="kpi-title">Tasa de Ahorro / Margen</span>
-            <span class="kpi-icon">🎯</span>
-          </div>
-          <div class="kpi-value" id="kpiAhorro">0.0%</div>
+        <div class="kpi-card">
+          <span class="kpi-title">Tasa de Ahorro</span>
+          <div class="kpi-value text-info tabular-nums" id="kpiAhorro">0.0%</div>
           <div class="kpi-progress-bar">
             <div class="kpi-progress-fill" id="kpiAhorroBar" style="width: 0%;"></div>
           </div>
@@ -192,8 +187,8 @@
         <!-- Monthly Evolution Line Chart -->
         <div class="chart-card chart-large">
           <div class="chart-header">
-            <h3 class="chart-title"><span class="chart-title-icon">📈</span> Evolución Temporal (Ingresos vs Gastos)</h3>
-            <span class="badge-chip">Mes a Mes</span>
+            <h3 class="chart-title">Evolución Temporal</h3>
+            <span class="badge-chip">Ingresos vs Gastos</span>
           </div>
           <div class="chart-wrapper">
             <canvas id="chartEvolucion"></canvas>
@@ -203,8 +198,8 @@
         <!-- Expense by Category Bar Chart -->
         <div class="chart-card">
           <div class="chart-header">
-            <h3 class="chart-title"><span class="chart-title-icon">📍</span> Gastos por Categoría</h3>
-            <span class="badge-chip">Top Categorías</span>
+            <h3 class="chart-title">Gastos por Categoría</h3>
+            <span class="badge-chip">Top Distribución</span>
           </div>
           <div class="chart-wrapper">
             <canvas id="chartCategorias"></canvas>
@@ -214,7 +209,7 @@
         <!-- Income Distribution Donut Chart -->
         <div class="chart-card">
           <div class="chart-header">
-            <h3 class="chart-title"><span class="chart-title-icon">🍩</span> Distribución de Ingresos</h3>
+            <h3 class="chart-title">Distribución de Ingresos</h3>
             <span class="badge-chip">Por Flujo</span>
           </div>
           <div class="chart-wrapper">
@@ -226,7 +221,7 @@
       <!-- Flow Summary Table (Visible in Dashboard view) -->
       <section id="flowSummarySection" class="table-card" aria-label="Resumen por Flujo">
         <div class="table-card-header">
-          <h3 class="card-title">🎯 Rendimiento Consolidado por Flujo</h3>
+          <h3 class="card-title">Rendimiento Consolidado por Flujo</h3>
           <span class="text-muted text-sm">Personal, Laboral, Negocios e Inversiones</span>
         </div>
         <div class="table-responsive">
@@ -252,13 +247,13 @@
       <section class="table-card" aria-label="Tabla de Transacciones">
         <div class="table-card-header">
           <div>
-            <h3 class="card-title" id="tableTitle">📋 Registro de Movimientos</h3>
+            <h3 class="card-title" id="tableTitle">Registro de Movimientos</h3>
             <p class="card-subtitle text-sm text-muted" id="tableSubtitle">Listado filtrado con detalle y trazabilidad</p>
           </div>
           <div class="table-actions">
             <span id="txCountBadge" class="badge-count">0 movimientos</span>
             <button id="btnExportCsv" class="btn btn-secondary btn-sm" title="Descargar datos en formato CSV">
-              📥 Exportar CSV
+              Exportar CSV
             </button>
           </div>
         </div>
@@ -283,7 +278,6 @@
         </div>
 
         <div id="emptyState" class="empty-state" style="display: none;">
-          <div class="empty-state-icon">📂</div>
           <h4>No se encontraron movimientos</h4>
           <p class="text-muted">Prueba cambiando los filtros de periodo, flujo o estado.</p>
         </div>
@@ -294,11 +288,10 @@
     <footer class="app-footer">
       <div class="footer-content">
         <div>
-          <strong>Finanzas Personales — Demo Cliente</strong> • Versión Standalone Segura
+          <span>Finanzas Personales</span> &bull; <span>Demo Cliente Standalone</span>
         </div>
         <div class="footer-meta">
-          <span>Moneda: <strong>BOB (Bs)</strong></span> •
-          <span>Aislamiento: <strong>100% Local</strong></span> •
+          <span>Moneda: <strong>BOB (Bs)</strong></span> &bull;
           <button id="btnResetDemoData" class="btn-link" title="Restaurar a los 35 movimientos iniciales">Restablecer datos demo</button>
         </div>
       </div>
@@ -318,21 +311,21 @@
         <div class="modal-body">
           <div class="form-row">
             <div class="form-group flex-1">
-              <label>Tipo de Movimiento: <span class="text-danger">*</span></label>
+              <label>Tipo de Movimiento</label>
               <div class="radio-toggle-group">
                 <label class="radio-pill">
                   <input type="radio" name="txTipo" value="Gasto" checked>
-                  <span class="radio-pill-label expense">💸 Gasto</span>
+                  <span class="radio-pill-label">Gasto</span>
                 </label>
                 <label class="radio-pill">
                   <input type="radio" name="txTipo" value="Ingreso">
-                  <span class="radio-pill-label income">💰 Ingreso</span>
+                  <span class="radio-pill-label">Ingreso</span>
                 </label>
               </div>
             </div>
 
             <div class="form-group flex-1">
-              <label for="txFlujo">Flujo: <span class="text-danger">*</span></label>
+              <label for="txFlujo">Flujo</label>
               <select id="txFlujo" class="form-control" required>
                 <option value="Personal">Personal</option>
                 <option value="Mi Trabajo">Mi Trabajo</option>
@@ -344,12 +337,12 @@
 
           <div class="form-row">
             <div class="form-group flex-1">
-              <label for="txFecha">Fecha: <span class="text-danger">*</span></label>
+              <label for="txFecha">Fecha</label>
               <input type="date" id="txFecha" class="form-control" value="2026-09-04" required>
             </div>
 
             <div class="form-group flex-1">
-              <label for="txMonto">Monto (BOB): <span class="text-danger">*</span></label>
+              <label for="txMonto">Monto (BOB)</label>
               <div class="input-prefix-group">
                 <span class="input-prefix">Bs</span>
                 <input type="number" id="txMonto" class="form-control" step="0.01" min="0.01" placeholder="0.00" required>
@@ -359,14 +352,14 @@
 
           <div class="form-row">
             <div class="form-group flex-1">
-              <label for="txCategoria">Categoría: <span class="text-danger">*</span></label>
+              <label for="txCategoria">Categoría</label>
               <select id="txCategoria" class="form-control" required>
                 <!-- Dynamically populated -->
               </select>
             </div>
 
             <div class="form-group flex-1">
-              <label for="txSubcategoria">Subcategoría:</label>
+              <label for="txSubcategoria">Subcategoría</label>
               <select id="txSubcategoria" class="form-control">
                 <!-- Dynamically populated -->
               </select>
@@ -375,19 +368,19 @@
 
           <div class="form-row">
             <div class="form-group flex-1">
-              <label for="txDetalle">Detalle / Descripción: <span class="text-danger">*</span></label>
-              <input type="text" id="txDetalle" class="form-control" placeholder="Ej: Compra supermercado, Salario, etc." required>
+              <label for="txDetalle">Detalle / Descripción</label>
+              <input type="text" id="txDetalle" class="form-control" placeholder="Ej: Compra supermercado, Salario mensual..." required>
             </div>
 
             <div class="form-group flex-1">
-              <label for="txProveedor">Proveedor / Entidad:</label>
-              <input type="text" id="txProveedor" class="form-control" placeholder="Ej: Hipermaxi, Uber, Empresa, Broker...">
+              <label for="txProveedor">Proveedor / Entidad</label>
+              <input type="text" id="txProveedor" class="form-control" placeholder="Ej: Hipermaxi, Uber, Empresa...">
             </div>
           </div>
 
           <div class="form-row">
             <div class="form-group flex-1">
-              <label for="txMetodo">Método de Pago / Cuenta:</label>
+              <label for="txMetodo">Método de Pago</label>
               <select id="txMetodo" class="form-control">
                 <option value="Efectivo">Efectivo</option>
                 <option value="Tarjeta de Débito BCP">Tarjeta de Débito BCP</option>
@@ -398,10 +391,10 @@
             </div>
 
             <div class="form-group flex-1">
-              <label for="txEstado">Estado del Movimiento:</label>
+              <label for="txEstado">Estado</label>
               <select id="txEstado" class="form-control">
-                <option value="Confirmado" selected>✓ Confirmado</option>
-                <option value="Pendiente de revisión">⚠️ Pendiente de revisión</option>
+                <option value="Confirmado" selected>Confirmado</option>
+                <option value="Pendiente de revisión">Pendiente de revisión</option>
               </select>
             </div>
           </div>
@@ -409,7 +402,7 @@
 
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" id="btnCancelModalTx">Cancelar</button>
-          <button type="submit" class="btn btn-primary" id="btnSubmitTx">Guardar Movimiento</button>
+          <button type="submit" class="btn btn-primary" id="btnSubmitTx">Guardar</button>
         </div>
       </form>
     </div>
@@ -441,7 +434,7 @@
         </table>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary" id="btnCloseDetailsBtn">Entendido</button>
+        <button type="button" class="btn btn-primary" id="btnCloseDetailsBtn">Cerrar</button>
       </div>
     </div>
   </div>
